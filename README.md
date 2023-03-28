@@ -24,7 +24,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v1.0.1
+      uses: christian-ci/action-yaml-github-output@v1.0.0
       with:
         file_path: path/to/your_yaml_file.yaml
 ```
@@ -64,7 +64,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: nchristian-ci/action-yaml-github-output@v1.0.1
+      uses: christian-ci/action-yaml-github-output@v1.0.0
       with:
         file_path: path/to/settings.yaml
 
@@ -95,7 +95,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v1.0.1
+      uses: christian-ci/action-yaml-github-output@v1.0.0
       with:
         file_path: path/to/settings.yaml
 
