@@ -1,0 +1,11 @@
+name: "YAML to Github Output"
+description: "Reads any key: value in a yaml file and sends it as a variable to the Github Output File"
+inputs:
+  file_path:
+    description: "Path to the yaml file"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.file_path }}
