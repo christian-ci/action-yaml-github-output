@@ -1,5 +1,8 @@
 name: "YAML to Github Output"
 description: "Reads any key: value in a yaml file and sends it as a variable to the Github Output File"
+branding:
+  icon: 'chevron-right'
+  color: 'blue'
 inputs:
   file_path:
     description: "Path to the yaml file"
