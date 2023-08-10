@@ -1,0 +1,9 @@
+app-name: demo-app
+architecture: arm64
+regions:
+  us-west-1:
+    cluster-name: us-cluster
+    app-name: us-demo-app
+  eu-central-1:
+    cluster-name: eu-cluster
+    app-name: eu-demo-app

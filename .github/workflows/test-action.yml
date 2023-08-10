@@ -1,0 +1,49 @@
+name: Test YAML to GitHub Output Action
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Run YAML to Github Output Action from PR
+      id: yaml-output
+      uses: ./
+      with:
+        file_path: "./.github/settings.yml"
+        region: us-west-1
+    
+    - name: Check outputs
+      run: |
+        # Check the global outputs
+        if [[ "${{ env.APP_NAME }}" != "demo-app" ]]; then
+          echo "Validation failed. Global 'app-name' output is not as expected."
+          exit 1
+        fi
+        if [[ "${{ env.ARCHITECTURE }}" != "arm64" ]]; then
+          echo "Validation failed. 'architecture' output is not as expected."
+          exit 1
+        fi
+        # Check the nested region outputs (assuming we're testing us-west-1 for this example)
+        if [[ "${{ env.CLUSTER_NAME }}" != "us-cluster" ]]; then
+          echo "Validation failed. 'cluster-name' for us-west-1 is not as expected."
+          exit 1
+        fi
+        if [[ "${{ env.APP_NAME }}" != "us-demo-app" ]]; then
+          echo "Validation failed. 'app-name' for us-west-1 is not as expected."
+          exit 1
+        fi
