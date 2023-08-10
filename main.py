@@ -26,8 +26,9 @@ def main():
     # Iterate through the key-value pairs, write them to the env file, and collect them for outputs
     with open(github_env_file, 'a') as env_file:
         for key, value in yaml_data.items():
-            # Convert key to uppercase for environment variable naming convention
-            env_key = key.upper()
+            # Convert key to uppercase and replace hyphens with underscores for environment variable naming convention
+            env_key = key.upper().replace('-', '_')
+
             # Write to the env file
             env_line = f"{env_key}={value}\n"
             env_file.write(env_line)
