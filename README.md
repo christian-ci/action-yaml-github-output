@@ -25,7 +25,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: your-username/your-repo-name@v1.0.0
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/your_yaml_file.yaml
 ```
@@ -74,7 +74,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: your-username/your-repo-name@v1.0.0
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/settings.yaml
         main_key: regions
