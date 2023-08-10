@@ -7,12 +7,16 @@ inputs:
   file_path:
     description: "Path to the yaml file"
     required: true
-  region:
-    description: "AWS region (Optional)"
+  main_key:
+    description: "Main key for nested data (Optional)"
+    required: false
+  sub_key:
+    description: "Sub key for nested data (Optional)"
     required: false
 runs:
   using: "docker"
   image: "Dockerfile"
   args:
     - ${{ inputs.file_path }}
-    - ${{ inputs.region }}
+    - ${{ inputs.main_key }}
+    - ${{ inputs.sub_key }}
