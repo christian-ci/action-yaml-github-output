@@ -1,0 +1,74 @@
+name: Test YAML to GitHub Output Action
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Run YAML to Github Output Action without region filter
+      id: yaml-output-global
+      uses: ./
+      with:
+        file_path: "./.github/settings.yml"
+
+    - name: Check global outputs and environment variables
+      run: |
+        # Check the global environment variables
+        if [[ "${{ env.APP_NAME }}" != "demo-app" ]]; then
+          echo "Validation failed. Global 'app-name' environment variable is not as expected."
+          exit 1
+        fi
+        if [[ "${{ env.ARCHITECTURE }}" != "arm64" ]]; then
+          echo "Validation failed. 'architecture' environment variable is not as expected."
+          exit 1
+        fi
+
+        # Check the global outputs
+        if [[ "${{ steps.yaml-output-global.outputs.app-name }}" != "demo-app" ]]; then
+          echo "Validation failed. Global 'app-name' output is not as expected."
+          exit 1
+        fi
+        if [[ "${{ steps.yaml-output-global.outputs.architecture }}" != "arm64" ]]; then
+          echo "Validation failed. 'architecture' output is not as expected."
+          exit 1
+        fi
+
+    - name: Run YAML to Github Output Action with region filter
+      id: yaml-output-region
+      uses: ./
+      with:
+        file_path: "./.github/settings.yml"
+        main_key: regions
+        sub_key: us-west-1
+
+    - name: Check regional outputs and environment variables
+      run: |
+        # Check the nested region environment variables
+        if [[ "${{ env.CLUSTER_NAME }}" != "us-cluster" ]]; then
+          echo "Validation failed. 'cluster-name' environment variable for us-west-1 is not as expected."
+          exit 1
+        fi
+        if [[ "${{ env.APP_NAME }}" != "us-demo-app" ]]; then
+          echo "Validation failed. 'app-name' environment variable for us-west-1 is not as expected."
+          exit 1
+        fi
+
+        # Check the nested region outputs
+        if [[ "${{ steps.yaml-output-region.outputs.cluster-name }}" != "us-cluster" ]]; then
+          echo "Validation failed. 'cluster-name' output for us-west-1 is not as expected."
+          exit 1
+        fi
+        if [[ "${{ steps.yaml-output-region.outputs.app-name }}" != "us-demo-app" ]]; then
+          echo "Validation failed. 'app-name' output for us-west-1 is not as expected."
+          exit 1
+        fi
