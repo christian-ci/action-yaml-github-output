@@ -1,5 +1,9 @@
 #!/bin/sh -l
-python /main.py \
---file_path "$1" \
---main_key "$2" \
---sub_key "$3"
+
+python main.py \
+--file_path "$FILE_PATH" \
+--format_type "$FORMAT_TYPE" \
+--main_key "$MAIN_KEY" \
+--sub_key "$SUB_KEY" \
+--primary_key "$PRIMARY_KEY" \
+--primary_value "$PRIMARY_VALUE"

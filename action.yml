@@ -13,10 +13,23 @@ inputs:
   sub_key:
     description: "Sub key for nested data (Optional)"
     required: false
+  format_type:
+    description: 'The format of the YAML. Possible values: simple_nested, crud'
+    required: false
+    default: 'simple_nested'
+  primary_key:
+    description: "Primary key for the CRUD format (Optional)"
+    required: false
+  primary_value:
+    description: "Primary value for the CRUD format (Optional)"
+    required: false
 runs:
   using: "docker"
   image: "Dockerfile"
-  args:
-    - ${{ inputs.file_path }}
-    - ${{ inputs.main_key }}
-    - ${{ inputs.sub_key }}
+  env:
+    FILE_PATH: ${{ inputs.file_path }}
+    FORMAT_TYPE: ${{ inputs.format_type }}
+    MAIN_KEY: ${{ inputs.main_key }}
+    SUB_KEY: ${{ inputs.sub_key }}
+    PRIMARY_KEY: ${{ inputs.primary_key }}
+    PRIMARY_VALUE: ${{ inputs.primary_value }}
