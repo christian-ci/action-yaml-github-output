@@ -1,0 +1,11 @@
+services:
+  - app-name: us-demo-app
+    region: us-west-1
+    acceptance-cluster-name: us-cluster
+    pre-prod-cluster-name: us-pre-cluster
+    prod-cluster-name: us-prod-cluster
+
+  - app-name: eu-demo-app
+    region: eu-central-1
+    cluster-name: eu-cluster
+    architecture: arm64
