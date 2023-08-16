@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-python main_action.py \
+python /main.py \
 --file_path "$FILE_PATH" \
 --format_type "$FORMAT_TYPE" \
 --main_key "$MAIN_KEY" \
