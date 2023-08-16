@@ -1,11 +1,7 @@
 FROM python:3.11-alpine
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY action_requirements.txt action_entrypoint.sh main_action.py /
 
-COPY entrypoint.sh /entrypoint.sh
-COPY main.py /main.py
+RUN pip install -r action_requirements.txt && chmod +x action_entrypoint.sh
 
-RUN chmod +x entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/action_entrypoint.sh"]
