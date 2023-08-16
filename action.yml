@@ -25,7 +25,7 @@ inputs:
     required: false
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "Dockerfile-action"
   env:
     FILE_PATH: ${{ inputs.file_path }}
     FORMAT_TYPE: ${{ inputs.format_type }}
