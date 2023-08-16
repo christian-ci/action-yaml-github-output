@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 COPY action_requirements.txt action_entrypoint.sh main_action.py /
 
