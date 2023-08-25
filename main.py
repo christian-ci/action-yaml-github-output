@@ -52,8 +52,8 @@ def main_action():
     with open(github_env_file, 'a') as env_file, open(github_output_file, 'a') as output_file:
         for key, value in yaml_data.items():
             env_key = key.upper().replace('-', '_')
-            env_file.write(f"{env_key}={value}\\n")
-            output_file.write(f"{key}={value}\\n")
+            env_file.write(f"{env_key}={value}\n")
+            output_file.write(f"{key}={value}\n")
 
 if __name__ == '__main__':
     try:
