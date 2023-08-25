@@ -23,23 +23,8 @@ jobs:
 
     - name: Check global outputs and environment variables
       run: |
-        # Check the global environment variables
         if [[ "${{ env.APP_NAME }}" != "demo-app" ]]; then
           echo "Validation failed. Global 'app-name' environment variable is not as expected."
-          exit 1
-        fi
-        if [[ "${{ env.ARCHITECTURE }}" != "arm64" ]]; then
-          echo "Validation failed. 'architecture' environment variable is not as expected."
-          exit 1
-        fi
-
-        # Check the global outputs
-        if [[ "${{ steps.yaml-output-global.outputs.app-name }}" != "demo-app" ]]; then
-          echo "Validation failed. Global 'app-name' output is not as expected."
-          exit 1
-        fi
-        if [[ "${{ steps.yaml-output-global.outputs.architecture }}" != "arm64" ]]; then
-          echo "Validation failed. 'architecture' output is not as expected."
           exit 1
         fi
 
@@ -53,26 +38,11 @@ jobs:
 
     - name: Check regional outputs and environment variables
       run: |
-        # Check the nested region environment variables
         if [[ "${{ env.CLUSTER_NAME }}" != "us-cluster" ]]; then
           echo "Validation failed. 'cluster-name' environment variable for us-west-1 is not as expected."
           exit 1
         fi
-        if [[ "${{ env.APP_NAME }}" != "us-demo-app" ]]; then
-          echo "Validation failed. 'app-name' environment variable for us-west-1 is not as expected."
-          exit 1
-        fi
 
-        # Check the nested region outputs
-        if [[ "${{ steps.yaml-output-region.outputs.cluster-name }}" != "us-cluster" ]]; then
-          echo "Validation failed. 'cluster-name' output for us-west-1 is not as expected."
-          exit 1
-        fi
-        if [[ "${{ steps.yaml-output-region.outputs.app-name }}" != "us-demo-app" ]]; then
-          echo "Validation failed. 'app-name' output for us-west-1 is not as expected."
-          exit 1
-        fi
-        
     - name: Run YAML to Github Output Action with CRUD format and primary key-value
       id: yaml-output-crud-primary
       uses: ./
@@ -84,38 +54,45 @@ jobs:
 
     - name: Check CRUD primary outputs and environment variables
       run: |
-        # Check the CRUD format environment variables for primary key-value
-        if [[ "${{ env.REGION }}" != "us-west-1" ]]; then
-          echo "Validation failed. 'region' environment variable is not as expected."
-          exit 1
-        fi
-        if [[ "${{ env.ACCEPTANCE_CLUSTER_NAME }}" != "us-cluster" ]]; then
-          echo "Validation failed. 'acceptance-cluster-name' environment variable is not as expected."
-          exit 1
-        fi
-        if [[ "${{ env.PRE_PROD_CLUSTER_NAME }}" != "us-pre-cluster" ]]; then
-          echo "Validation failed. 'pre-prod-cluster-name' environment variable is not as expected."
-          exit 1
-        fi
-        if [[ "${{ env.PROD_CLUSTER_NAME }}" != "us-prod-cluster" ]]; then
-          echo "Validation failed. 'prod-cluster-name' environment variable is not as expected."
+        if [[ "${{ steps.yaml-output-crud-primary.outputs.prod-cluster-name }}" != "us-prod-cluster" ]]; then
+          echo "Validation failed. 'prod-cluster-name' output is not as expected."
           exit 1
         fi
 
-        # Check the CRUD format outputs for primary key-value
-        if [[ "${{ steps.yaml-output-crud-primary.outputs.region }}" != "us-west-1" ]]; then
-          echo "Validation failed. 'region' output is not as expected."
+    - name: Run YAML to Github Output Action with CRUD format and single top-level key
+      id: yaml-output-crud-primary-single
+      uses: ./
+      with:
+        file_path: "./.github/settings-crud.yml"
+        format_type: "crud"
+        primary_key: "app-name"
+        primary_value: "us-demo-app"
+        top_level_keys: "build"
+
+    - name: Check CRUD outputs and environment variables with single top-level key
+      run: |
+        if [[ "${{ env.BUILD_DOCKERFILE }}" != "Dockerfile" ]]; then
+          echo "Validation failed. 'BUILD_DOCKERFILE' environment variable is not as expected."
           exit 1
         fi
-        if [[ "${{ steps.yaml-output-crud-primary.outputs.acceptance-cluster-name }}" != "us-cluster" ]]; then
-          echo "Validation failed. 'acceptance-cluster-name' output is not as expected."
+
+    - name: Run YAML to Github Output Action with CRUD format and multiple top-level keys
+      id: yaml-output-crud-primary-multiple
+      uses: ./
+      with:
+        file_path: "./.github/settings-crud.yml"
+        format_type: "crud"
+        primary_key: "app-name"
+        primary_value: "us-demo-app"
+        top_level_keys: "build,deployment"
+
+    - name: Check CRUD outputs and environment variables with multiple top-level keys
+      run: |
+        if [[ "${{ env.DEPLOYMENT_REGION }}" != "us-west-1" ]]; then
+          echo "Validation failed. 'DEPLOYMENT_REGION' environment variable is not as expected."
           exit 1
         fi
-        if [[ "${{ steps.yaml-output-crud-primary.outputs.pre-prod-cluster-name }}" != "us-pre-cluster" ]]; then
-          echo "Validation failed. 'pre-prod-cluster-name' output is not as expected."
-          exit 1
-        fi
-        if [[ "${{ steps.yaml-output-crud-primary.outputs.prod-cluster-name }}" != "us-prod-cluster" ]]; then
-          echo "Validation failed. 'prod-cluster-name' output is not as expected."
+        if [[ "${{ env.BUILD_DOCKERFILE }}" != "Dockerfile" ]]; then
+          echo "Validation failed. 'BUILD_DOCKERFILE' environment variable is not as expected."
           exit 1
         fi

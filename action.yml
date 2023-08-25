@@ -23,6 +23,9 @@ inputs:
   primary_value:
     description: "Primary value for the CRUD format (Optional)"
     required: false
+  top_level_keys:
+    description: "Top-level keys to search in the YAML (Optional, comma-separated if multiple)"
+    required: false
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -33,3 +36,4 @@ runs:
     SUB_KEY: ${{ inputs.sub_key }}
     PRIMARY_KEY: ${{ inputs.primary_key }}
     PRIMARY_VALUE: ${{ inputs.primary_value }}
+    TOP_LEVEL_KEYS: ${{ inputs.top_level_keys }}

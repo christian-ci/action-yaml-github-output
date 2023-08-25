@@ -1,0 +1,52 @@
+# Python files
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+.env
+
+# Jupyter notebook files
+.ipynb_checkpoints/
+
+# GitHub Actions
+.github/workflows/secrets.yml
+
+# Visual Studio Code
+.vscode/
+.settings/
+.history/
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Atom
+.atom/
+.atom-*
+
+# Vim
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*.~
+
+# Other
+*.bak
+*.tmp
+*.temp
