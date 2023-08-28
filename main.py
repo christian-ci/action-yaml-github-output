@@ -1,4 +1,3 @@
-
 import yaml
 import os
 import argparse
@@ -15,7 +14,11 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
     if top_level_keys:
         top_level_keys = top_level_keys.split(',')
     else:
-        top_level_keys = [None]
+        # Dynamically detect the top-level keys
+        if isinstance(yaml_data, dict) and len(yaml_data.keys()) == 1:
+            top_level_keys = list(yaml_data.keys())
+        else:
+            top_level_keys = [None]
 
     for top_level_key in top_level_keys:
         if top_level_key:
@@ -27,7 +30,7 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
             output[top_level_key] = yaml_data_filtered
             continue
 
-        services = yaml_data_filtered.get('services', [])
+        services = yaml_data_filtered if isinstance(yaml_data_filtered, list) else []
         for service in services:
             if service.get(primary_key) == primary_value:
                 output[top_level_key] = service
@@ -54,8 +57,8 @@ def main_action():
     else:
         yaml_data = extract_simple_nested(yaml_data, args.main_key, args.sub_key)
 
-    github_env_file = os.environ.get('GITHUB_ENV')
-    github_output_file = os.environ.get('GITHUB_OUTPUT')
+    github_env_file = os.environ.get('GITHUB_ENV', 'env.txt')
+    github_output_file = os.environ.get('GITHUB_OUTPUT', 'output.txt')
 
     with open(github_env_file, 'a') as env_file, open(github_output_file, 'a') as output_file:
         for key, value in yaml_data.items():

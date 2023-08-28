@@ -58,7 +58,7 @@ jobs:
             echo "Validation failed. 'prod-cluster-name' output is not as expected."
             exit 1
           fi
-  
+
       - name: Run YAML to Github Output Action with CRUD format and single top-level key
         id: yaml-output-crud-primary-single
         uses: ./
@@ -68,14 +68,14 @@ jobs:
           primary_key: "app-name"
           primary_value: "us-demo-app"
           top_level_keys: "build"
-  
+
       - name: Check CRUD outputs and environment variables with single top-level key
         run: |
           if [[ "${{ env.BUILD_DOCKERFILE }}" != "Dockerfile" ]]; then
             echo "Validation failed. 'BUILD_DOCKERFILE' environment variable is not as expected."
             exit 1
           fi
-  
+
       - name: Run YAML to Github Output Action with CRUD format and multiple top-level keys
         id: yaml-output-crud-primary-multiple
         uses: ./
@@ -85,7 +85,7 @@ jobs:
           primary_key: "app-name"
           primary_value: "us-demo-app"
           top_level_keys: "build,deployment"
-  
+
       - name: Check CRUD outputs and environment variables with multiple top-level keys
         run: |
           if [[ "${{ env.DEPLOYMENT_REGION }}" != "us-west-1" ]]; then
