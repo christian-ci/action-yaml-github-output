@@ -1,0 +1,16 @@
+build:
+- app-name: us-demo-app
+  dockerfile: Dockerfile
+- app-name: eu-demo-app
+  dockerfile: path/Dockerfile
+deployment:
+- app-name: us-demo-app
+  pre-prod-cluster-name: us-pre-cluster
+  acceptance-cluster-name: us-cluster
+  prod-cluster-name: us-prod-cluster
+  region: us-west-1
+
+- app-name: eu-demo-app
+  architecture: arm64
+  cluster-name: eu-cluster
+  region: eu-central-1

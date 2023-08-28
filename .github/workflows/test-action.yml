@@ -63,7 +63,7 @@ jobs:
         id: yaml-output-crud-primary-single
         uses: ./
         with:
-          file_path: "./.github/settings-crud.yml"
+          file_path: "./.github/settings-crud-top-level.yml"
           format_type: "crud"
           primary_key: "app-name"
           primary_value: "us-demo-app"
@@ -80,7 +80,7 @@ jobs:
         id: yaml-output-crud-primary-multiple
         uses: ./
         with:
-          file_path: "./.github/settings-crud.yml"
+          file_path: "./.github/settings-crud-top-level.yml"
           format_type: "crud"
           primary_key: "app-name"
           primary_value: "us-demo-app"
