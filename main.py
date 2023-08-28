@@ -14,7 +14,6 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
     if top_level_keys:
         top_level_keys = top_level_keys.split(',')
     else:
-        # Dynamically detect the top-level keys
         if isinstance(yaml_data, dict) and len(yaml_data.keys()) == 1:
             top_level_keys = list(yaml_data.keys())
         else:
@@ -30,10 +29,10 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
             output[top_level_key] = yaml_data_filtered
             continue
 
-        services = yaml_data_filtered if isinstance(yaml_data_filtered, list) else []
-        for service in services:
-            if service.get(primary_key) == primary_value:
-                output[top_level_key] = service
+        items_list = yaml_data_filtered if isinstance(yaml_data_filtered, list) else []
+        for item in items_list:
+            if item.get(primary_key) == primary_value:
+                output[top_level_key] = item
                 break
 
     return output
