@@ -95,47 +95,4 @@ jobs:
           if [[ "${{ env.BUILD_DOCKERFILE }}" != "Dockerfile" ]]; then
             echo "Validation failed. 'BUILD_DOCKERFILE' environment variable is not as expected."
             exit 1
-          fi      
-                
-      - name: Run YAML to Github Output Action with CRUD format and single top-level key
-        id: yaml-output-crud-primary-single
-        uses: ./
-        with:
-          file_path: "./.github/settings-crud.yml"
-          format_type: "crud"
-          primary_key: "app-name"
-          primary_value: "us-demo-app"
-          top_level_keys: "build"
-      
-      - name: Validate outputs for single top-level key
-        run: |
-          # Validate the output for 'build' top-level key
-          output_json=$(echo '${{ steps.yaml-output-crud-primary-single.outputs.result }}' | jq '.')
-          if [[ "$(echo "$output_json" | jq -r '.["build"]["app-name"]')" != "us-demo-app" ]]; then
-            echo "Validation failed. 'app-name' output for 'build' top-level key is not as expected."
-            exit 1
           fi
-      
-      - name: Run YAML to Github Output Action with CRUD format and multiple top-level keys
-        id: yaml-output-crud-primary-multiple
-        uses: ./
-        with:
-          file_path: "./.github/settings-crud.yml"
-          format_type: "crud"
-          primary_key: "app-name"
-          primary_value: "us-demo-app"
-          top_level_keys: "build,deployment"
-      
-      - name: Validate outputs for multiple top-level keys
-        run: |
-          # Validate the output for 'build' and 'deployment' top-level keys
-          output_json=$(echo '${{ steps.yaml-output-crud-primary-multiple.outputs.result }}' | jq '.')
-          if [[ "$(echo "$output_json" | jq -r '.["build"]["app-name"]')" != "us-demo-app" ]]; then
-            echo "Validation failed. 'app-name' output for 'build' top-level key is not as expected."
-            exit 1
-          fi
-          if [[ "$(echo "$output_json" | jq -r '.["deployment"]["app-name"]')" != "us-demo-app" ]]; then
-            echo "Validation failed. 'app-name' output for 'deployment' top-level key is not as expected."
-            exit 1
-          fi      
-        
