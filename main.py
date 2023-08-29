@@ -2,6 +2,13 @@ import yaml
 import os
 import argparse
 
+def write_to_files(data_dict, env_file, output_file):
+    with open(env_file, 'a') as env_f, open(output_file, 'a') as out_f:
+        for key, value in data_dict.items():
+            env_key = key.upper().replace('-', '_')
+            env_f.write(f"{env_key}={value}\n")
+            out_f.write(f"{key}={value}\n")
+
 def extract_simple_nested(yaml_data, main_key=None, sub_key=None):
     if main_key:
         yaml_data = yaml_data.get(main_key, {})
@@ -14,10 +21,7 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
     if top_level_keys:
         top_level_keys = top_level_keys.split(',')
     else:
-        if isinstance(yaml_data, dict) and len(yaml_data.keys()) == 1:
-            top_level_keys = list(yaml_data.keys())
-        else:
-            top_level_keys = [None]
+        top_level_keys = [None]
 
     for top_level_key in top_level_keys:
         if top_level_key:
@@ -40,12 +44,12 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
 def main_action():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file_path', required=True, help='Path to the yaml file')
-    parser.add_argument('--main_key', help='Main key in the YAML to look for nested data', default=None)
-    parser.add_argument('--sub_key', help='Sub key within the main key to extract data from', default=None)
-    parser.add_argument('--format_type', help='The format of the YAML. Possible values: simple_nested, crud', default='simple_nested')
-    parser.add_argument('--primary_key', help='Primary key in the CRUD format to look for specific settings block', default=None)
-    parser.add_argument('--primary_value', help='Value of the primary key in the CRUD format to extract specific settings', default=None)
-    parser.add_argument('--top_level_keys', help='Top-level keys for the CRUD format (Optional, comma-separated)', default=None)
+    parser.add_argument('--main_key', default=None)
+    parser.add_argument('--sub_key', default=None)
+    parser.add_argument('--format_type', default='simple_nested')
+    parser.add_argument('--primary_key', default=None)
+    parser.add_argument('--primary_value', default=None)
+    parser.add_argument('--top_level_keys', default=None)
     args = parser.parse_args()
 
     with open(args.file_path, 'r') as yaml_file:
@@ -56,14 +60,17 @@ def main_action():
     else:
         yaml_data = extract_simple_nested(yaml_data, args.main_key, args.sub_key)
 
-    github_env_file = os.environ.get('GITHUB_ENV', 'env.txt')
-    github_output_file = os.environ.get('GITHUB_OUTPUT', 'output.txt')
+    github_env_file = os.environ.get('GITHUB_ENV')
+    github_output_file = os.environ.get('GITHUB_OUTPUT')
 
-    with open(github_env_file, 'a') as env_file, open(github_output_file, 'a') as output_file:
-        for key, value in yaml_data.items():
-            env_key = key.upper().replace('-', '_')
-            env_file.write(f"{env_key}={value}\n")
-            output_file.write(f"{key}={value}\n")
+    if isinstance(yaml_data, dict):
+        for top_level_key, nested_data in yaml_data.items():
+            if isinstance(nested_data, dict):
+                write_to_files(nested_data, github_env_file, github_output_file)
+            else:
+                write_to_files({top_level_key: nested_data}, github_env_file, github_output_file)
+    else:
+        write_to_files(yaml_data, github_env_file, github_output_file)
 
 if __name__ == "__main__":
     try:
