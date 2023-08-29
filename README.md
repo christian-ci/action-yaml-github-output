@@ -24,7 +24,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v2.1
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/your_yaml_file.yaml
 ```
@@ -79,7 +79,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v2.1
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/settings.yaml
         main_key: regions
@@ -137,7 +137,7 @@ jobs:
 
     - name: Run YAML to Github Output Action for 'build' settings
       id: yaml-output-build
-      uses: christian-ci/action-yaml-github-output@v2.1
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/settings.yaml
         format_type: crud
@@ -147,7 +147,7 @@ jobs:
 
     - name: Run YAML to Github Output Action for 'deployment' settings
       id: yaml-output-deployment
-      uses: christian-ci/action-yaml-github-output@v2.1
+      uses: christian-ci/action-yaml-github-output@v2
       with:
         file_path: path/to/settings.yaml
         format_type: crud
