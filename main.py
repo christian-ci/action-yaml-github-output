@@ -43,7 +43,7 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
         items_list = yaml_data_filtered if isinstance(yaml_data_filtered, list) else []
         for item in items_list:
             if item.get(primary_key) == primary_value:
-                output[top_level_key] = item
+                output.update(item)  # Merge item into output
                 break
 
     return output
