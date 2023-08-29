@@ -21,7 +21,7 @@ def extract_crud(yaml_data, primary_key=None, primary_value=None, top_level_keys
     if top_level_keys:
         top_level_keys = top_level_keys.split(',')
     else:
-        top_level_keys = [None]
+        top_level_keys = list(yaml_data.keys())
 
     for top_level_key in top_level_keys:
         if top_level_key:
