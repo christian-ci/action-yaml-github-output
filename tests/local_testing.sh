@@ -42,16 +42,40 @@ for file in "${test_files[@]}"; do
         echo "Test failed for $file"
       fi
       ;;
-    "../.github/settings-crud-top-level.yml")
+    "../.github/settings-crud-top-level-test.yml")
+      # Test with only 'build' as the top-level key
+      python ../main.py --file_path=$file --format_type=crud --primary_key=app-name --primary_value=us-demo-app --top_level_keys=build
+      echo "---- Content of GITHUB_ENV ----"
+      cat $GITHUB_ENV
+      echo "-------------------------------"
+      if grep -q "DOCKERFILE=Dockerfile" $GITHUB_ENV; then
+        echo "Test succeeded for $file with top-level key 'build'"
+      else
+        echo "Test failed for $file with top-level key 'build'"
+      fi
+
+      # Test with only 'deployment' as the top-level key
+      rm -f $GITHUB_ENV $GITHUB_OUTPUT
+      python ../main.py --file_path=$file --format_type=crud --primary_key=app-name --primary_value=us-demo-app --top_level_keys=deployment
+      echo "---- Content of GITHUB_ENV ----"
+      cat $GITHUB_ENV
+      echo "-------------------------------"
+      if grep -q "PRE_PROD_CLUSTER_NAME=us-pre-cluster" $GITHUB_ENV && grep -q "PROD_CLUSTER_NAME=us-prod-cluster" $GITHUB_ENV; then
+        echo "Test succeeded for $file with top-level key 'deployment'"
+      else
+        echo "Test failed for $file with top-level key 'deployment'"
+      fi
+
+      # Test with both 'build' and 'deployment' as the top-level keys
+      rm -f $GITHUB_ENV $GITHUB_OUTPUT
       python ../main.py --file_path=$file --format_type=crud --primary_key=app-name --primary_value=us-demo-app --top_level_keys=build,deployment
       echo "---- Content of GITHUB_ENV ----"
       cat $GITHUB_ENV
       echo "-------------------------------"
-      # Validate the output
-      if grep -q "PRE_PROD_CLUSTER_NAME=us-pre-cluster" $GITHUB_ENV && grep -q "PROD_CLUSTER_NAME=us-prod-cluster" $GITHUB_ENV; then
-        echo "Test succeeded for $file"
+      if grep -q "DOCKERFILE=Dockerfile" $GITHUB_ENV && grep -q "PRE_PROD_CLUSTER_NAME=us-pre-cluster" $GITHUB_ENV && grep -q "PROD_CLUSTER_NAME=us-prod-cluster" $GITHUB_ENV; then
+        echo "Test succeeded for $file with top-level keys 'build,deployment'"
       else
-        echo "Test failed for $file"
+        echo "Test failed for $file with top-level keys 'build,deployment'"
       fi
       ;;
   esac

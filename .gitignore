@@ -51,6 +51,6 @@ Desktop.ini
 *.tmp
 *.temp
 
-## Local
-#tests/github_env.txt
-#tests/github_output.txt
+# Local
+tests/github_env.txt
+tests/github_output.txt
