@@ -24,7 +24,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v2
+      uses: christian-ci/action-yaml-github-output@v2.1
       with:
         file_path: path/to/your_yaml_file.yaml
 ```
@@ -37,10 +37,11 @@ jobs:
 |---------------|----------------------------------------------------|----------|-----------------|
 | file_path     | The relative path to the YAML file.                | Yes      |                 |
 | format_type   | The format of the YAML. Possible values: `simple_nested`, `crud`. | No | `simple_nested` |
-| main_key      | Main key in the YAML to look for nested data.     | No       | None            |
-| sub_key       | Sub key within the main key to extract data from. | No       | None            |
-| primary_key   | Primary key for the CRUD format.                  | No       | None            |
-| primary_value | Primary value for the CRUD format.                | No       | None            |
+| main_key      | Main key in the YAML to look for nested data.      | No       | None            |
+| sub_key       | Sub key within the main key to extract data from.  | No       | None            |
+| primary_key   | Primary key for the CRUD format.                   | No       | None            |
+| primary_value | Primary value for the CRUD format.                 | No       | None            |
+| top_level_keys | Top-level keys to search in the YAML (Optional, comma-separated if multiple). | No | All top-level keys |
 
 ## Example
 
@@ -78,7 +79,7 @@ jobs:
 
     - name: Run YAML to Github Output Action
       id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v2
+      uses: christian-ci/action-yaml-github-output@v2.1
       with:
         file_path: path/to/settings.yaml
         main_key: regions
@@ -100,51 +101,79 @@ jobs:
 For the `crud` format, the YAML file might look like:
 
 ```yaml
-services:
-  - app-name: us-demo-app
-    region: us-west-1
-    acceptance-cluster-name: us-cluster
-    pre-prod-cluster-name: us-pre-cluster
-    prod-cluster-name: us-prod-cluster
+build:
+- app-name: us-demo-app
+  dockerfile: Dockerfile
+- app-name: eu-demo-app
+  dockerfile: path/Dockerfile
+deployment:
+- app-name: us-demo-app
+  pre-prod-cluster-name: us-pre-cluster
+  acceptance-cluster-name: us-cluster
+  prod-cluster-name: us-prod-cluster
+  region: us-west-1
 
-  - app-name: eu-demo-app
-    region: eu-central-1
-    cluster-name: eu-cluster
-    architecture: arm64
+- app-name: eu-demo-app
+  architecture: arm64
+  cluster-name: eu-cluster
+  region: eu-central-1
 ```
 
-In this case, you can specify the `primary_key` and `primary_value` to fetch specific settings. For example, if you want to extract the settings for the `us-demo-app`, you can set `primary_key` to `app-name` and `primary_value` to `us-demo-app`.
+In this case, you can specify the `top_level_keys`, `primary_key` and `primary_value` to fetch specific settings. For example, if you want to extract the settings for the `us-demo-app`, you can set `primary_key` to `app-name` and `primary_value` to `us-demo-app`.
 
 Your `workflow.yml` file might look like:
 
 ```yaml
-name: Example Workflow
+name: Comprehensive Example Workflow
 
 on: [push, pull_request]
 
 jobs:
-  example_job:
+  comprehensive_example_job:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Run YAML to Github Output Action
-      id: yaml-output
-      uses: christian-ci/action-yaml-github-output@v2
+    - name: Run YAML to Github Output Action for 'build' settings
+      id: yaml-output-build
+      uses: christian-ci/action-yaml-github-output@v2.1
       with:
         file_path: path/to/settings.yaml
         format_type: crud
+        top_level_keys: build
         primary_key: app-name
         primary_value: us-demo-app
 
-    - name: Print Variables
-      run: |
-        echo "Cluster Name: ${{ env.CLUSTER_NAME }}"
-        echo "App Name: ${{ env.APP_NAME }}"
+    - name: Run YAML to Github Output Action for 'deployment' settings
+      id: yaml-output-deployment
+      uses: christian-ci/action-yaml-github-output@v2.1
+      with:
+        file_path: path/to/settings.yaml
+        format_type: crud
+        top_level_keys: deployment
+        primary_key: app-name
+        primary_value: us-demo-app
 
-    - name: Print Outputs
+    - name: Print Variables from 'build' settings
       run: |
-        echo "Cluster Name: ${{ steps.yaml-output.outputs.cluster-name }}"
-        echo "App Name: ${{ steps.yaml-output.outputs.app-name }}"    
+        echo "Dockerfile Path: ${{ env.DOCKERFILE }}"
+        echo "App Name: ${{ env.APP_NAME_BUILD }}"
+
+    - name: Print Outputs from 'build' settings
+      run: |
+        echo "Dockerfile Path: ${{ steps.yaml-output-build.outputs.dockerfile }}"
+        echo "App Name: ${{ steps.yaml-output-build.outputs.app-name }}"
+
+    - name: Print Variables from 'deployment' settings
+      run: |
+        echo "Pre-prod Cluster: ${{ env.PRE_PROD_CLUSTER_NAME }}"
+        echo "Prod Cluster: ${{ env.PROD_CLUSTER_NAME }}"
+        echo "Region: ${{ env.REGION }}"
+
+    - name: Print Outputs from 'deployment' settings
+      run: |
+        echo "Pre-prod Cluster: ${{ steps.yaml-output-deployment.outputs.pre-prod-cluster-name }}"
+        echo "Prod Cluster: ${{ steps.yaml-output-deployment.outputs.prod-cluster-name }}"
+        echo "Region: ${{ steps.yaml-output-deployment.outputs.region }}"
 ```

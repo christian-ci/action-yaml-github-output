@@ -72,7 +72,7 @@ jobs:
           echo "Validation failed. 'app-name' output for us-west-1 is not as expected."
           exit 1
         fi
-        
+
     - name: Run YAML to Github Output Action with CRUD format and primary key-value
       id: yaml-output-crud-primary
       uses: ./
@@ -117,5 +117,56 @@ jobs:
         fi
         if [[ "${{ steps.yaml-output-crud-primary.outputs.prod-cluster-name }}" != "us-prod-cluster" ]]; then
           echo "Validation failed. 'prod-cluster-name' output is not as expected."
+          exit 1
+        fi
+
+    - name: Run YAML to Github Output Action with CRUD format and top-level key 'build'
+      id: yaml-output-crud-build
+      uses: ./
+      with:
+        file_path: "./.github/settings-crud-top-level.yml"
+        format_type: "crud"
+        primary_key: "app-name"
+        primary_value: "us-demo-app"
+        top_level_keys: "build"
+    
+    - name: Check CRUD outputs and environment variables for top-level key 'build'
+      run: |
+        if [[ "${{ env.DOCKERFILE }}" != "Dockerfile" ]]; then
+          echo "Validation failed. 'dockerfile' environment variable is not as expected."
+          exit 1
+        fi
+
+    - name: Run YAML to Github Output Action with CRUD format and top-level key 'deployment'
+      id: yaml-output-crud-deployment
+      uses: ./
+      with:
+        file_path: "./.github/settings-crud-top-level.yml"
+        format_type: "crud"
+        primary_key: "app-name"
+        primary_value: "us-demo-app"
+        top_level_keys: "deployment"
+
+    - name: Check CRUD outputs and environment variables for top-level key 'deployment'
+      run: |
+        if [[ "${{ env.PRE_PROD_CLUSTER_NAME }}" != "us-pre-cluster" ]] || [[ "${{ env.PROD_CLUSTER_NAME }}" != "us-prod-cluster" ]]; then
+          echo "Validation failed. Cluster names are not as expected."
+          exit 1
+        fi
+
+    - name: Run YAML to Github Output Action with CRUD format and top-level keys 'build,deployment'
+      id: yaml-output-crud-both
+      uses: ./
+      with:
+        file_path: "./.github/settings-crud-top-level.yml"
+        format_type: "crud"
+        primary_key: "app-name"
+        primary_value: "us-demo-app"
+        top_level_keys: "build,deployment"
+        
+    - name: Check CRUD outputs and environment variables for top-level keys 'build,deployment'
+      run: |
+        if [[ "${{ env.DOCKERFILE }}" != "Dockerfile" ]] || [[ "${{ env.PRE_PROD_CLUSTER_NAME }}" != "us-pre-cluster" ]] || [[ "${{ env.PROD_CLUSTER_NAME }}" != "us-prod-cluster" ]]; then
+          echo "Validation failed. Either dockerfile or cluster names are not as expected."
           exit 1
         fi

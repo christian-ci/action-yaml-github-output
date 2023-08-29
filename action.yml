@@ -14,14 +14,17 @@ inputs:
     description: "Sub key for nested data (Optional)"
     required: false
   format_type:
-    description: 'The format of the YAML. Possible values: simple_nested, crud'
+    description: 'The format of the YAML. Possible values: simple, crud'
     required: false
-    default: 'simple_nested'
+    default: 'simple'
   primary_key:
     description: "Primary key for the CRUD format (Optional)"
     required: false
   primary_value:
     description: "Primary value for the CRUD format (Optional)"
+    required: false
+  top_level_keys:
+    description: "Top-level keys for the CRUD format (Optional, comma-separated)"
     required: false
 runs:
   using: "docker"
@@ -33,3 +36,4 @@ runs:
     SUB_KEY: ${{ inputs.sub_key }}
     PRIMARY_KEY: ${{ inputs.primary_key }}
     PRIMARY_VALUE: ${{ inputs.primary_value }}
+    TOP_LEVEL_KEYS: ${{ inputs.top_level_keys }}

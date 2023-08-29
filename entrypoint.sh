@@ -6,4 +6,5 @@ python /main.py \
 --main_key "$MAIN_KEY" \
 --sub_key "$SUB_KEY" \
 --primary_key "$PRIMARY_KEY" \
---primary_value "$PRIMARY_VALUE"
+--primary_value "$PRIMARY_VALUE" \
+--top_level_keys "$TOP_LEVEL_KEYS"
