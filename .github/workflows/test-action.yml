@@ -124,7 +124,7 @@ jobs:
       id: yaml-output-crud-build
       uses: ./
       with:
-        file_path: "./.github/settings-crud-top-level-test.yml"
+        file_path: "./.github/settings-crud-top-level.yml"
         format_type: "crud"
         primary_key: "app-name"
         primary_value: "us-demo-app"
@@ -141,7 +141,7 @@ jobs:
       id: yaml-output-crud-deployment
       uses: ./
       with:
-        file_path: "./.github/settings-crud-top-level-test.yml"
+        file_path: "./.github/settings-crud-top-level.yml"
         format_type: "crud"
         primary_key: "app-name"
         primary_value: "us-demo-app"
@@ -158,7 +158,7 @@ jobs:
       id: yaml-output-crud-both
       uses: ./
       with:
-        file_path: "./.github/settings-crud-top-level-test.yml"
+        file_path: "./.github/settings-crud-top-level.yml"
         format_type: "crud"
         primary_key: "app-name"
         primary_value: "us-demo-app"
