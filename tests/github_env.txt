@@ -1,7 +1,0 @@
-APP_NAME=us-demo-app
-DOCKERFILE=Dockerfile
-APP_NAME=us-demo-app
-PRE_PROD_CLUSTER_NAME=us-pre-cluster
-ACCEPTANCE_CLUSTER_NAME=us-cluster
-PROD_CLUSTER_NAME=us-prod-cluster
-REGION=us-west-1
