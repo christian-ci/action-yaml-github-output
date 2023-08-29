@@ -4,10 +4,17 @@ import argparse
 
 def write_to_files(data_dict, env_file, output_file):
     with open(env_file, 'a') as env_f, open(output_file, 'a') as out_f:
-        for key, value in data_dict.items():
-            env_key = key.upper().replace('-', '_')
-            env_f.write(f"{env_key}={value}\n")
-            out_f.write(f"{key}={value}\n")
+        if isinstance(data_dict, list):
+            for item in data_dict:
+                for key, value in item.items():
+                    env_key = key.upper().replace('-', '_')
+                    env_f.write(f"{env_key}={value}\n")
+                    out_f.write(f"{key}={value}\n")
+        else:
+            for key, value in data_dict.items():
+                env_key = key.upper().replace('-', '_')
+                env_f.write(f"{env_key}={value}\n")
+                out_f.write(f"{key}={value}\n")
 
 def extract_simple_nested(yaml_data, main_key=None, sub_key=None):
     if main_key:
